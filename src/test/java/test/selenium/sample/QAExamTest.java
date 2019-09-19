@@ -41,44 +41,26 @@ public class QAExamTest {
     }
 
     @Test
-    public void testSQLInjection() {
-        webDriver.get(TestSettings.URL_SQL_INJECTION);
-
-        // Check page title
-        assertPageTitle(PAGE_TITLE_XPATH, "SQL Injection- How it works");
-
-        // Check for list of books
-        List<WebElement> booksList = null;
-        try {
-            booksList = webDriver.findElement(By.tagName("ol")).findElements(By.tagName("li"));
-        } catch (NoSuchElementException nsee) {
-            Assert.fail("No books were found on the list");
-        }
-        Assert.assertEquals("Books total count is different then expected", 2, booksList.size());
-
-        takeScreenshot("sqlinjection");
-    }
-
-    @Test
-    public void testSQLInjectionOK() {
-        webDriver.get(TestSettings.URL_SQL_INJECTION_OK);
-
-        // Check page title
-        assertPageTitle(PAGE_TITLE_XPATH, "SQL Injection- How to avoid");
-
-        // Check for list of books
-        List<WebElement> booksList = null;
-        try {
-            booksList = webDriver.findElement(By.tagName("ol")).findElements(By.tagName("li"));
-        } catch (NoSuchElementException ignore) {}
-        Assert.assertNull("No books were expected, but were found on page", booksList);
-
-        takeScreenshot("sqlinjection_ok");
-    }
-
-    @Test
     public void testXSS() {
+
+        String djangoURL = "https://docs.djangoproject.com/en/2.0/topics/security/";
+
+        String xssURL = "https://danibudi.github.io/Cross-Site%20Scripting%20(XSS).html";
+
         webDriver.get(TestSettings.URL_XSS);
+
+        Assert.assertNotNull(webDriver.findElement(By.linkText(djangoURL)));
+
+
+        Assert.assertNotNull(webDriver.findElement(By.linkText(xssURL)));
+
+
+        webDriver.get(xssURL);
+
+        Assert.assertEquals(djangoURL, webDriver.getCurrentUrl());
+
+        webDriver.navigate().back();
+
 
         // Check if there is an alert present on the page
         Alert alert = null;
@@ -96,27 +78,6 @@ public class QAExamTest {
         assertPageTitle(PAGE_TITLE_XPATH, "Cross-Site Scripting (XSS)- How it works");
 
         takeScreenshot("xss");
-    }
-
-    @Test
-    public void testXSSOK() {
-        webDriver.get(TestSettings.URL_XSS_OK);
-
-        // Check if there is an alert present on the page
-        Alert alert = null;
-        try {
-            alert = webDriver.switchTo().alert();
-        } catch (NoAlertPresentException nape) {}
-        Assert.assertNull("No alert was expected, but was found on page", alert);
-
-        // Check for the escaped text
-        String bodyText = webDriver.findElement(By.tagName("body")).getText();
-        Assert.assertTrue(bodyText.contains("<script>alert(42)</script>"));
-
-        // Check page title
-        assertPageTitle(PAGE_TITLE_XPATH, "Cross-Site Scripting (XSS)- How to avoid");
-
-        takeScreenshot("xss_ok");
     }
 
     private void assertPageTitle(String elementXpath, String expectedTitle) {
