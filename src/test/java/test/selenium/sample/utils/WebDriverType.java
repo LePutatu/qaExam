@@ -8,8 +8,8 @@ import lombok.Getter;
 @Getter
 public enum WebDriverType {
 
-    FIREFOX("webdriver.gecko.driver", "\\Users\\kanevnik\\Personal\\Software metrics\\geckodriver.exe"),
-    CHROME("webdriver.chrome.driver", "\\Users\\kanevnik\\Personal\\Software metrics\\chromedriver.exe");
+    FIREFOX("webdriver.gecko.driver", "geckodriver.exe"),
+    CHROME("webdriver.chrome.driver", "chromedriver.exe");
 
     private String systemProperty;
     private String pathToDriver;
